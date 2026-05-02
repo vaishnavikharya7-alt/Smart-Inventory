@@ -68,5 +68,5 @@ npm install
 3️⃣ Run the server
 npm start
 4️⃣ Open in browser
-http://localhost:3000
+https://smart-inventory-three.vercel.app/
 📸 <img width="1360" height="628" alt="image" src="https://github.com/user-attachments/assets/fc09bc60-31a5-46b9-a8ea-4a74850034c4" />
