@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkHive — Hire & Get Hired</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080b11;--bg2:#0d1118;--card:#131a25;--card2:#182231;--hover:#1e2d40;--fg:#e2e6ec;--fg2:#8294aa;--fg3:#475569;--accent:#00d4aa;--accent2:#00f0c0;--accentg:rgba(0,212,170,.1);--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;--purple:#a78bfa;--pink:#f472b6;--border:#1a2535;--border2:#243347}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);scroll-behavior:smooth}
+h1,h2,h3,h4,h5{font-family:'Space Grotesk',sans-serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.glow{position:fixed;border-radius:50%;filter:blur(140px);opacity:.03;pointer-events:none;z-index:0;animation:gf 25s ease-in-out infinite}
+@keyframes gf{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.1)}}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:64px 64px;opacity:.08;pointer-events:none;z-index:0}
+.btn{padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+.btn-p{background:var(--accent);color:#080b11;border-color:var(--accent)}.btn-p:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,212,170,.25)}
+.btn-o{background:transparent;color:var(--fg2);border-color:var(--border2)}.btn-o:hover{color:var(--fg);border-color:var(--accent);background:var(--accentg)}
+.btn-g{background:transparent;color:var(--fg2);border-color:transparent}.btn-g:hover{color:var(--fg);background:var(--hover)}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-d{background:rgba(239,68,68,.08);color:var(--red);border-color:rgba(239,68,68,.2)}.btn-d:hover{background:rgba(239,68,68,.18)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600}
+.b-a{background:rgba(0,212,170,.1);color:var(--accent)}.b-o{background:rgba(245,158,11,.1);color:var(--orange)}.b-b{background:rgba(59,130,246,.1);color:var(--blue)}.b-r{background:rgba(239,68,68,.1);color:var(--red)}.b-p{background:rgba(167,139,250,.1);color:var(--purple)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;transition:all .3s;overflow:hidden}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.inp{width:100%;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--fg);font-size:13px;outline:0;font-family:'DM Sans',sans-serif;transition:border .2s}.inp:focus{border-color:var(--accent)}
+select.inp{appearance:auto}textarea.inp{resize:vertical}
+.toggle{width:42px;height:22px;background:var(--border2);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}.toggle.on{background:var(--accent)}.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s}.toggle.on::after{transform:translateX(20px)}
+.toast-c{position:fixed;top:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:7px}
+.toast{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:13px 17px;display:flex;align-items:center;gap:10px;min-width:300px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:ti .35s ease;font-size:13px}
+.toast.out{animation:to .25s ease forwards}
+@keyframes ti{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes to{to{opacity:0;transform:translateX(30px)}}
+.modal-o{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(5px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s}
+.modal-o.open{opacity:1;pointer-events:auto}
+.modal-b{background:var(--card);border:1px solid var(--border);border-radius:14px;width:520px;max-width:94vw;max-height:88vh;overflow-y:auto;transform:scale(.95) translateY(8px);transition:transform .28s}
+.modal-o.open .modal-b{transform:scale(1) translateY(0)}
+.prog{height:5px;background:var(--bg);border-radius:3px;overflow:hidden}.prog-f{height:100%;border-radius:3px;transition:width 1s ease}
+.tab-g{display:flex;gap:2px;background:var(--bg);border-radius:7px;padding:2px}.tab-b{padding:6px 14px;border-radius:5px;font-size:12px;color:var(--fg2);cursor:pointer;transition:all .2s;border:0;background:0 0;font-family:'DM Sans',sans-serif;font-weight:500}.tab-b.act{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.2)}.tab-b:hover:not(.act){color:var(--fg)}
+.avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#080b11;flex-shrink:0}
+.section{animation:fi .4s ease}@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.nav-link{position:relative;color:var(--fg2);font-size:13.5px;cursor:pointer;transition:color .2s;padding:4px 0}.nav-link:hover,.nav-link.act{color:var(--fg)}.nav-link.act::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--accent);border-radius:1px}
+.hero-float{position:absolute;animation:hf 6s ease-in-out infinite}
+@keyframes hf{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.counter{font-variant-numeric:tabular-nums}
+@media(max-width:768px){.hide-m{display:none!important}.mob-col{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow" style="width:600px;height:600px;background:var(--accent);top:-200px;right:-100px"></div>
+<div class="glow" style="width:500px;height:500px;background:#08a88a;bottom:-150px;left:-100px;animation-delay:-10s"></div>
+<div class="toast-c" id="toastC"></div>
+<div class="modal-o" id="modalO" onclick="if(event.target===this)closeModal()"><div class="modal-b" id="modalB"></div></div>
+
+<!-- NAVBAR -->
+<nav id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all .3s;background:transparent">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:24px">
+      <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="goTo('home')">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--accent),#08a88a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#080b11;font-family:'Space Grotesk',sans-serif">W</div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:var(--fg)" id="logoText">WorkHive</span>
+      </div>
+      <div style="display:flex;gap:20px" class="hide-m">
+        <span class="nav-link act" onclick="goTo('home')">Home</span>
+        <span class="nav-link" onclick="goTo('jobs')">Find Work</span>
+        <span class="nav-link" onclick="goTo('freelancers')">Freelancers</span>
+        <span class="nav-link" onclick="goTo('how')">How It Works</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px" id="navRight">
+      <button class="btn btn-o btn-sm" onclick="openLogin()" id="loginBtn">Log In</button>
+      <button class="btn btn-p btn-sm" onclick="openSignup()" id="signupBtn">Sign Up</button>
+    </div>
+  </div>
+</nav>
+
+<main style="position:relative;z-index:1">
+
+<!-- HERO -->
+<section id="sec-home" style="min-height:100vh;display:flex;align-items:center;padding:100px 24px 60px">
+  <div style="max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center" class="mob-col">
+    <div class="section">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--accentg);border:1px solid rgba(0,212,170,.2);border-radius:20px;padding:6px 14px;margin-bottom:20px">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite"></div>
+        <span style="font-size:12px;color:var(--accent);font-weight:600">12,400+ projects posted this month</span>
+      </div>
+      <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
+      <h1 style="font-size:clamp(32px,5vw,52px);font-weight:700;line-height:1.1;margin-bottom:18px">Hire Top Talent.<br><span style="color:var(--accent)">Build Something</span> Great.</h1>
+      <p style="font-size:16px;color:var(--fg2);line-height:1.7;margin-bottom:28px;max-width:480px">India ka sabse trusted freelance platform — verified freelancers, secure payments, aur real results. Abhi start karo.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px">
+        <button class="btn btn-p" onclick="goTo('jobs')" style="padding:13px 28px;font-size:14px"><i class="fas fa-search"></i> Find Work</button>
+        <button class="btn btn-o" onclick="openPostJob()" style="padding:13px 28px;font-size:14px"><i class="fas fa-plus"></i> Post a Job</button>
+      </div>
+      <div style="display:flex;gap:32px">
+        <div><div style="font-size:24px;font-weight:700;font-family:'Space Grotesk',sans-serif" class="counter" data-target="48500">0</div><div style="font-size:12px;color:var(--fg3)">Freelancers</div></div>
+        <div><div style="font-size:24px;font-weight:700;font-family:'Space Grotesk',sans-serif" class="counter" data-target="12800">0</div><div style="font-size:12px;color:var(--fg3)">Projects Done</div></div>
+        <div><div style="font-size:24px;font-weight:700;font-family:'Space Grotesk',sans-serif" class="counter" data-target="98">0</div><div style="font-size:12px;color:var(--fg3)">% Satisfaction</div></div>
+      </div>
+    </div>
+    <div style="position:relative" class="section hide-m">
+      <div class="hero-float" style="top:-20px;right:20px;z-index:2">
+        <div class="card" style="padding:16px;width:240px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="avatar" style="background:var(--accent)">PS</div><div><div style="font-size:13px;font-weight:600">Priya Sharma</div><div style="font-size:11px;color:var(--fg3)">UI/UX Designer</div></div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge b-a">Figma</span><span class="badge b-b">React</span><span class="badge b-p">Design</span></div><div style="margin-top:10px;font-size:11px;color:var(--accent);font-weight:600">Available Now <i class="fas fa-circle" style="font-size:6px"></i></div></div>
+      </div>
+      <div class="hero-float" style="bottom:40px;left:-10px;z-index:2;animation-delay:-2s">
+        <div class="card" style="padding:16px;width:220px"><div style="font-size:11px;color:var(--fg3);margin-bottom:6px">Payment Received</div><div style="font-size:20px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--accent)">+₹45,000</div><div style="font-size:11px;color:var(--fg3);margin-top:4px">E-Commerce Redesign</div></div>
+      </div>
+      <div class="hero-float" style="top:50%;left:30px;z-index:1;animation-delay:-4s">
+        <div class="card" style="padding:12px 16px;width:200px;display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;background:rgba(245,158,11,.1);border-radius:8px;display:flex;align-items:center;justify-content:center"><i class="fas fa-star" style="color:var(--orange);font-size:14px"></i></div><div><div style="font-size:14px;font-weight:700">4.9/5</div><div style="font-size:10px;color:var(--fg3)">Avg Rating</div></div></div>
+      </div>
+      <div style="width:320px;height:320px;background:linear-gradient(135deg,rgba(0,212,170,.06),rgba(0,212,170,.02));border-radius:50%;border:1px solid rgba(0,212,170,.08);margin:0 auto"></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOBS -->
+<section id="sec-jobs" style="padding:80px 24px">
+  <div style="max-width:1200px;margin:0 auto" class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px">
+      <div><h2 style="font-size:28px;font-weight:700">Find Work</h2><p style="color:var(--fg2);font-size:14px;margin-top:4px">Browse latest projects and apply</p></div>
+      <button class="btn btn-p" onclick="openPostJob()"><i class="fas fa-plus"></i> Post a Job</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;position:relative"><i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--fg3);font-size:12px"></i><input class="inp" placeholder="Search jobs..." style="padding-left:36px" id="jobSearch" oninput="filterJobs()"></div>
+      <select class="inp" style="width:150px" id="jobCat" onchange="filterJobs()"><option value="all">All Categories</option><option>Web Development</option><option>Mobile App</option><option>Design</option><option>Writing</option><option>Marketing</option><option>Data Science</option></select>
+      <select class="inp" style="width:130px" id="jobBudget" onchange="filterJobs()"><option value="all">Any Budget</option><option>Under ₹10k</option><option>₹10k-50k</option><option>₹50k-1L</option><option>Above ₹1L</option></select>
+      <select class="inp" style="width:120px" id="jobSort" onchange="filterJobs()"><option value="newest">Newest</option><option value="budget-h">Budget: High</option><option value="budget-l">Budget: Low</option><option value="proposals">Least Proposals</option></select>
+    </div>
+    <div id="jobsList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</section>
+
+<!-- FREELANCERS -->
+<section id="sec-freelancers" style="padding:80px 24px">
+  <div style="max-width:1200px;margin:0 auto" class="section">
+    <div style="margin-bottom:24px"><h2 style="font-size:28px;font-weight:700">Top Freelancers</h2><p style="color:var(--fg2);font-size:14px;margin-top:4px">Verified professionals ready to work</p></div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;position:relative"><i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--fg3);font-size:12px"></i><input class="inp" placeholder="Search freelancers..." style="padding-left:36px" id="flSearch" oninput="filterFL()"></div>
+      <select class="inp" style="width:150px" id="flSkill" onchange="filterFL()"><option value="all">All Skills</option><option>React</option><option>Python</option><option>UI/UX</option><option>Node.js</option><option>Flutter</option><option>SEO</option></select>
+      <select class="inp" style="width:140px" id="flRating" onchange="filterFL()"><option value="all">Any Rating</option><option>4.5+</option><option>4.0+</option><option>3.5+</option></select>
+    </div>
+    <div id="flList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="sec-how" style="padding:80px 24px">
+  <div style="max-width:1000px;margin:0 auto" class="section">
+    <div style="text-align:center;margin-bottom:48px"><h2 style="font-size:28px;font-weight:700">How It Works</h2><p style="color:var(--fg2);font-size:14px;margin-top:4px">Teen simple steps mein shuru karo</p></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px" class="mob-col">
+      <div class="card" style="padding:28px;text-align:center;border-top:3px solid var(--accent)"><div style="width:52px;height:52px;background:var(--accentg);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px"><i class="fas fa-user-plus" style="color:var(--accent);font-size:20px"></i></div><h3 style="font-size:17px;font-weight:700;margin-bottom:8px">Create Profile</h3><p style="font-size:13px;color:var(--fg2);line-height:1.6">Free mein account banao, skills add karo, portfolio upload karo. 2 minute ka kaam.</p></div>
+      <div class="card" style="padding:28px;text-align:center;border-top:3px solid var(--orange)"><div style="width:52px;height:52px;background:rgba(245,158,11,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px"><i class="fas fa-paper-plane" style="color:var(--orange);font-size:20px"></i></div><h3 style="font-size:17px;font-weight:700;margin-bottom:8px">Apply / Post</h3><p style="font-size:13px;color:var(--fg2);line-height:1.6">Jobs browse karo aur apply karo, ya apna project post karo aur proposals receive karo.</p></div>
+      <div class="card" style="padding:28px;text-align:center;border-top:3px solid var(--blue)"><div style="width:52px;height:52px;background:rgba(59,130,246,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px"><i class="fas fa-handshake" style="color:var(--blue);font-size:20px"></i></div><h3 style="font-size:17px;font-weight:700;margin-bottom:8px">Get Paid</h3><p style="font-size:13px;color:var(--fg2);line-height:1.6">Kaam complete karo, secure payment receive karo. Escrow protection har project par.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD (hidden by default) -->
+<section id="sec-dashboard" style="padding:90px 24px 60px;display:none">
+  <div style="max-width:1200px;margin:0 auto" class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+      <div><h2 style="font-size:24px;font-weight:700">Dashboard</h2><p style="color:var(--fg2);font-size:13px;margin-top:3px">Welcome back, <span id="dashName" style="color:var(--accent)">User</span></p></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-o btn-sm" onclick="openPostJob()"><i class="fas fa-plus"></i> Post Job</button><button class="btn btn-o btn-sm" onclick="goTo('jobs')"><i class="fas fa-search"></i> Browse Jobs</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px" id="dashStats"></div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:24px" class="mob-col">
+      <div class="card"><div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:14px;font-weight:600">My Applications</h3></div><div id="myApps" style="padding:8px"></div></div>
+      <div class="card"><div style="padding:16px 20px;border-bottom:1px solid var(--border)"><h3 style="font-size:14px;font-weight:600">Quick Actions</h3></div><div style="padding:16px;display:flex;flex-direction:column;gap:10px" id="quickActs"></div></div>
+    </div>
+    <div class="card"><div style="padding:16px 20px;border-bottom:1px solid var(--border)"><h3 style="font-size:14px;font-weight:600">My Profile</h3></div><div style="padding:20px" id="myProfile"></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding:48px 24px 24px;border-top:1px solid var(--border);position:relative;z-index:1">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px" class="mob-col">
+      <div><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),#08a88a);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#080b11;font-family:'Space Grotesk',sans-serif">W</div><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px">WorkHive</span></div><p style="font-size:13px;color:var(--fg3);line-height:1.6;max-width:280px">India ka fastest growing freelance platform. Talent aur opportunities ko connect karna humara mission hai.</p></div>
+      <div><h4 style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--fg)">Platform</h4><div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;color:var(--fg3);cursor:pointer" onclick="goTo('jobs')">Find Work</span><span style="font-size:13px;color:var(--fg3);cursor:pointer" onclick="goTo('freelancers')">Find Talent</span><span style="font-size:13px;color:var(--fg3);cursor:pointer" onclick="openPostJob()">Post a Job</span></div></div>
+      <div><h4 style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--fg)">Resources</h4><div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;color:var(--fg3);cursor:pointer" onclick="toast('Blog page coming soon','info')">Blog</span><span style="font-size:13px;color:var(--fg3);cursor:pointer" onclick="toast('Help center coming soon','info')">Help Center</span><span style="font-size:13px;color:var(--fg3);cursor:pointer" onclick="toast('API docs coming soon','info')">API</span></div></div>
+      <div><h4 style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--fg)">Connect</h4><div style="display:flex;gap:10px"><div style="width:34px;height:34px;background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="toast('Opening Twitter...','info')"><i class="fab fa-twitter" style="color:var(--fg3);font-size:14px"></i></div><div style="width:34px;height:34px;background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="toast('Opening LinkedIn...','info')"><i class="fab fa-linkedin-in" style="color:var(--fg3);font-size:14px"></i></div><div style="width:34px;height:34px;background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="toast('Opening GitHub...','info')"><i class="fab fa-github" style="color:var(--fg3);font-size:14px"></i></div></div></div>
+    </div>
+    <div style="padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><span style="font-size:12px;color:var(--fg3)">2024 WorkHive. All rights reserved.</span><span style="font-size:12px;color:var(--fg3)">Made with <span style="color:var(--red)">&hearts;</span> in India</span></div>
+  </div>
+</footer>
+</main>
+
+<script>
+// ===== DATA =====
+const jobs=[
+  {id:1,title:'E-Commerce Website Redesign',cat:'Web Development',budget:75000,duration:'3-4 weeks',proposals:12,desc:'Modern React + Node.js e-commerce site banana hai. Payment gateway integration, admin panel, aur responsive design chahiye.',skills:['React','Node.js','MongoDB','Tailwind'],posted:'2 hours ago',client:'TechStart Pvt Ltd',rating:4.8},
+  {id:2,title:'Mobile App for Food Delivery',cat:'Mobile App',budget:120000,duration:'6-8 weeks',proposals:24,desc:'Flutter se Android + iOS food delivery app banana hai. Real-time tracking, payment, aur restaurant panel required.',skills:['Flutter','Firebase','Dart','Maps API'],posted:'5 hours ago',client:'FoodQuick',rating:4.5},
+  {id:3,title:'Brand Identity & Logo Design',cat:'Design',budget:15000,duration:'1 week',proposals:38,desc:'Naye startup ke liye complete brand identity chahiye — logo, color palette, typography, aur brand guidelines.',skills:['Figma','Illustrator','Branding'],posted:'8 hours ago',client:'GreenLeaf Organics',rating:4.9},
+  {id:4,title:'SEO Optimization for SaaS Website',cat:'Marketing',budget:25000,duration:'Ongoing',proposals:8,desc:'Technical SEO audit, on-page optimization, content strategy, aur monthly reporting chahiye. B2B SaaS product hai.',skills:['SEO','Analytics','Content Strategy'],posted:'1 day ago',client:'CloudMetrics',rating:4.6},
+  {id:5,title:'Python Data Pipeline Development',cat:'Data Science',budget:90000,duration:'4-5 weeks',proposals:6,desc:'ETL pipeline banana hai Python mein — multiple data sources se data fetch karke clean aur transform karna hai. Airflow use karna hai.',skills:['Python','Airflow','SQL','Pandas'],posted:'1 day ago',client:'DataBridge Analytics',rating:4.7},
+  {id:6,title:'Technical Blog Articles (10 posts)',cat:'Writing',budget:20000,duration:'2 weeks',proposals:19,desc:'Tech startup ke liye 10 high-quality blog posts likhne hain. Topics: AI, cloud computing, devops. 1500+ words each.',skills:['Technical Writing','SEO Writing','English'],posted:'2 days ago',client:'DevInsight',rating:4.4},
+  {id:7,title:'React Native Social Media App',cat:'Mobile App',budget:200000,duration:'8-10 weeks',proposals:15,desc:'Social media app with stories, reels, messaging, aur real-time notifications. Backend already hai, sirf frontend chahiye.',skills:['React Native','TypeScript','Redux','WebSockets'],posted:'2 days ago',client:'SocialBuzz',rating:4.3},
+  {id:8,title:'Landing Page with Animations',cat:'Web Development',budget:8000,duration:'3-5 days',proposals:42,desc:'SaaS product ke liye stunning landing page chahiye. GSAP animations, parallax effects, aur high conversion rate design.',skills:['HTML/CSS','GSAP','JavaScript','Figma'],posted:'3 days ago',client:'LaunchPad',rating:4.9},
+];
+
+const freelancers=[
+  {id:1,name:'Priya Sharma',title:'Senior UI/UX Designer',rate:2500,rating:4.9,reviews:87,earned:'₹18.5L',skills:['Figma','Adobe XD','Prototyping','Design Systems'],avatar:'PS',color:'var(--accent)',available:true,location:'Mumbai',completed:124},
+  {id:2,name:'Arjun Patel',title:'Full Stack Developer',rate:3000,rating:4.8,reviews:112,earned:'₹32L',skills:['React','Node.js','TypeScript','PostgreSQL'],avatar:'AP',color:'var(--blue)',available:true,location:'Bangalore',completed:198},
+  {id:3,name:'Neha Gupta',title:'Flutter Developer',rate:2200,rating:4.7,reviews:64,earned:'₹12L',skills:['Flutter','Dart','Firebase','REST APIs'],avatar:'NG',color:'var(--purple)',available:false,location:'Delhi',completed:76},
+  {id:4,name:'Rahul Verma',title:'Python Data Scientist',rate:3500,rating:4.9,reviews:93,earned:'₹28L',skills:['Python','ML','TensorFlow','SQL'],avatar:'RV',color:'var(--orange)',available:true,location:'Hyderabad',completed:156},
+  {id:5,name:'Sneha Kulkarni',title:'Content Strategist',rate:1500,rating:4.6,reviews:48,earned:'₹6.8L',skills:['SEO Writing','Content Strategy','Copywriting'],avatar:'SK',color:'var(--pink)',available:true,location:'Pune',completed:89},
+  {id:6,name:'Vikram Singh',title:'DevOps Engineer',rate:4000,rating:4.8,reviews:71,earned:'₹24L',skills:['AWS','Docker','Kubernetes','Terraform'],avatar:'VS',color:'var(--accent)',available:false,location:'Chennai',completed:134},
+  {id:7,name:'Ananya Reddy',title:'React Native Developer',rate:2800,rating:4.7,reviews:56,earned:'₹15L',skills:['React Native','TypeScript','Redux','Firebase'],avatar:'AR',color:'var(--blue)',available:true,location:'Hyderabad',completed:92},
+  {id:8,name:'Karthik Nair',title:'SEO Specialist',rate:1800,rating:4.5,reviews:39,earned:'₹5.2L',skills:['SEO','Analytics','Link Building','SEM'],avatar:'KN',color:'var(--orange)',available:true,location:'Kochi',completed:67},
+];
+
+// ===== STATE =====
+let currentUser=null;
+let myApplications=[];
+
+// ===== UTILS =====
+function toast(msg,type='info'){
+  const c=document.getElementById('toastC');
+  const ic={success:'fa-check-circle',danger:'fa-circle-xmark',warning:'fa-triangle-exclamation',info:'fa-circle-info'};
+  const cl={success:'var(--accent)',danger:'var(--red)',warning:'var(--orange)',info:'var(--blue)'};
+  const t=document.createElement('div');t.className='toast';
+  t.innerHTML=`<i class="fas ${ic[type]}" style="color:${cl[type]};font-size:15px;flex-shrink:0"></i><span style="color:var(--fg)">${msg}</span>`;
+  c.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),250)},3200);
+}
+function openModal(h){document.getElementById('modalB').innerHTML=h;document.getElementById('modalO').classList.add('open')}
+function closeModal(){document.getElementById('modalO').classList.remove('open')}
+function formatBudget(n){return'₹'+n.toLocaleString('en-IN')}
+function stars(r){let s='';for(let i=1;i<=5;i++)s+=`<i class="fas fa-star" style="color:${i<=Math.round(r)?'var(--orange)':'var(--border2)'};font-size:10px"></i>`;return s}
+
+// ===== NAVIGATION =====
+function goTo(sec){
+  document.querySelectorAll('section[id^="sec-"]').forEach(s=>s.style.display='none');
+  const el=document.getElementById('sec-'+sec);if(el)el.style.display='';
+  if(sec==='home')el.style.display='flex';
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('act'));
+  document.querySelector(`.nav-link[onclick*="${sec}"]`)?.classList.add('act');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Navbar scroll effect
+window.addEventListener('scroll',()=>{
+  const nb=document.getElementById('navbar');
+  if(window.scrollY>40){nb.style.background='rgba(8,11,17,.92)';nb.style.backdropFilter='blur(12px)';nb.style.borderBottom='1px solid var(--border)'}
+  else{nb.style.background='transparent';nb.style.backdropFilter='none';nb.style.borderBottom='none'}
+});
+
+// Counter animation
+function animateCounters(){
+  document.querySelectorAll('.counter').forEach(el=>{
+    const target=+el.dataset.target;if(!target)return;
+    let current=0;const step=target/60;
+    const timer=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(timer)}el.textContent=Math.floor(current).toLocaleString('en-IN')+(target===98?'%':'')},25);
+  });
+}
+setTimeout(animateCounters,500);
+
+// ===== AUTH =====
+function openLogin(){
+  openModal(`<div style="padding:28px">
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:4px">Welcome Back</h3>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:22px">Apne account mein login karo</p>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Email</label><input class="inp" type="email" id="loginEmail" placeholder="aapka@email.com"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Password</label><input class="inp" type="password" id="loginPass" placeholder="Password enter karo"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center"><label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fg2);cursor:pointer"><input type="checkbox" style="accent-color:var(--accent)"> Remember me</label><span style="font-size:12px;color:var(--accent);cursor:pointer" onclick="toast('Password reset link sent','info')">Forgot password?</span></div>
+    </div>
+    <button class="btn btn-p" style="width:100%;justify-content:center;padding:12px" onclick="doLogin()">Log In</button>
+    <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--fg2)">Account nahi hai? <span style="color:var(--accent);cursor:pointer;font-weight:600" onclick="closeModal();openSignup()">Sign Up karo</span></div>
+  </div>`);
+}
+
+function openSignup(){
+  openModal(`<div style="padding:28px">
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:4px">Create Account</h3>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:22px">Free mein shuru karo — 2 minute</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">First Name</label><input class="inp" id="sigFName" placeholder="Pehla naam"></div>
+        <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Last Name</label><input class="inp" id="sigLName" placeholder="Last name"></div>
+      </div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Email</label><input class="inp" type="email" id="sigEmail" placeholder="aapka@email.com"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Password</label><input class="inp" type="password" id="sigPass" placeholder="Kam se kam 8 characters"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Main ek hun...</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;color:var(--fg2)"><input type="radio" name="role" value="freelancer" style="accent-color:var(--accent)" checked> Freelancer</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;color:var(--fg2)"><input type="radio" name="role" value="client" style="accent-color:var(--accent)"> Client</label>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-p" style="width:100%;justify-content:center;padding:12px" onclick="doSignup()">Create Account</button>
+    <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--fg2)">Already have account? <span style="color:var(--accent);cursor:pointer;font-weight:600" onclick="closeModal();openLogin()">Log In</span></div>
+  </div>`);
+}
+
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  if(!email){toast('Email enter karo','warning');return}
+  if(!pass){toast('Password enter karo','warning');return}
+  if(!email.includes('@')){toast('Valid email enter karo','warning');return}
+  const name=email.split('@')[0].charAt(0).toUpperCase()+email.split('@')[0].slice(1);
+  loginUser({name,email,role:localStorage.getItem('wh_role')||'freelancer',joined:'Member since 2024'});
+}
+
+function doSignup(){
+  const f=document.getElementById('sigFName').value.trim();
+  const l=document.getElementById('sigLName').value.trim();
+  const email=document.getElementById('sigEmail').value.trim();
+  const pass=document.getElementById('sigPass').value;
+  const role=document.querySelector('input[name="role"]:checked').value;
+  if(!f||!l){toast('Naam enter karo','warning');return}
+  if(!email||!email.includes('@')){toast('Valid email enter karo','warning');return}
+  if(pass.length<6){toast('Password kam se kam 6 characters ka ho','warning');return}
+  localStorage.setItem('wh_role',role);
+  loginUser({name:f+' '+l,email,role,joined:'Member since 2024'});
+  toast('Account created successfully!','success');
+}
+
+function loginUser(user){
+  currentUser=user;
+  closeModal();
+  document.getElementById('navRight').innerHTML=`
+    <span style="font-size:13px;color:var(--fg2);margin-right:4px" class="hide-m">${user.name}</span>
+    <div class="avatar" style="background:linear-gradient(135deg,var(--accent),#08a88a);cursor:pointer;width:32px;height:32px;font-size:11px" onclick="goTo('dashboard')">${user.name.split(' ').map(w=>w[0]).join('').toUpperCase()}</div>
+    <button class="btn btn-o btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt" style="font-size:11px"></i></button>
+  `;
+  goTo('dashboard');
+  renderDashboard();
+}
+
+function logout(){
+  currentUser=null;myApplications=[];
+  document.getElementById('navRight').innerHTML=`
+    <button class="btn btn-o btn-sm" onclick="openLogin()" id="loginBtn">Log In</button>
+    <button class="btn btn-p btn-sm" onclick="openSignup()" id="signupBtn">Sign Up</button>
+  `;
+  goTo('home');
+  toast('Logged out successfully','info');
+}
+
+// ===== DASHBOARD =====
+function renderDashboard(){
+  if(!currentUser)return;
+  document.getElementById('dashName').textContent=currentUser.name;
+  const isFL=currentUser.role==='freelancer';
+  document.getElementById('dashStats').innerHTML=[
+    {label:isFL?'Active Proposals':'Posted Jobs',val:isFL?myApplications.length:3,icon:'fa-paper-plane',color:'var(--accent)'},
+    {label:isFL?'Profile Views':'Total Proposals',val:isFL?47:28,icon:'fa-eye',color:'var(--blue)'},
+    {label:isFL?'Earnings This Month':'Total Spent',val:isFL?'₹42,500':'₹1,85,000',icon:'fa-wallet',color:'var(--orange)'},
+    {label:'Completed',val:isFL?8:5,icon:'fa-check-circle',color:'var(--accent)'},
+  ].map(s=>`<div class="card" style="padding:18px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:11px;color:var(--fg2)">${s.label}</span><div style="width:28px;height:28px;background:${s.color}14;border-radius:7px;display:flex;align-items:center;justify-content:center"><i class="fas ${s.icon}" style="color:${s.color};font-size:12px"></i></div></div><div style="font-size:22px;font-weight:700;font-family:'Space Grotesk',sans-serif">${s.val}</div></div>`).join('');
+
+  // My Applications
+  const appsDiv=document.getElementById('myApps');
+  if(myApplications.length===0){
+    appsDiv.innerHTML=`<div style="padding:32px;text-align:center"><i class="fas fa-paper-plane" style="font-size:28px;color:var(--fg3);margin-bottom:12px"></i><p style="font-size:14px;color:var(--fg2)">Abhi tak koi application nahi hai</p><button class="btn btn-p btn-sm" style="margin-top:12px" onclick="goTo('jobs')">Browse Jobs</button></div>`;
+  }else{
+    appsDiv.innerHTML=myApplications.map(a=>{
+      const j=jobs.find(x=>x.id===a.jobId);
+      return j?`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--fg)">${j.title}</div><div style="font-size:11px;color:var(--fg3);margin-top:2px">${j.cat} &middot; ${formatBudget(j.budget)}</div></div>
+        <span class="badge ${a.status==='pending'?'b-o':'b-a'}">${a.status}</span>
+      </div>`:'';
+    }).join('');
+  }
+
+  // Quick Actions
+  document.getElementById('quickActs').innerHTML=[
+    {label:'Edit Profile',icon:'fa-user-pen',action:'openEditProfile()'},
+    {label:'Browse Jobs',icon:'fa-search',action:"goTo('jobs')"},
+    {label:'Post a Job',icon:'fa-plus',action:'openPostJob()'},
+    {label:'Saved Jobs',icon:'fa-bookmark',action:"toast('3 saved jobs','info')"},
+    {label:'Messages',icon:'fa-envelope',action:"toast('2 unread messages','info')"},
+    {label:'Settings',icon:'fa-gear',action:"toast('Settings page coming soon','info')"},
+  ].map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg2);border-radius:8px;cursor:pointer;transition:background .2s" onmouseenter="this.style.background='var(--hover)'" onmouseleave="this.style.background='var(--bg2)'" onclick="${a.action}"><i class="fas ${a.icon}" style="color:var(--fg3);font-size:13px;width:18px;text-align:center"></i><span style="font-size:13px;color:var(--fg2)">${a.label}</span></div>`).join('');
+
+  // Profile
+  const initials=currentUser.name.split(' ').map(w=>w[0]).join('').toUpperCase();
+  document.getElementById('myProfile').innerHTML=`
+    <div style="display:flex;gap:20px;align-items:start;flex-wrap:wrap">
+      <div class="avatar" style="width:64px;height:64px;font-size:22px;background:linear-gradient(135deg,var(--accent),#08a88a);border-radius:14px">${initials}</div>
+      <div style="flex:1;min-width:200px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><h3 style="font-size:18px;font-weight:700">${currentUser.name}</h3><span class="badge b-a">${currentUser.role==='freelancer'?'Freelancer':'Client'}</span></div>
+        <p style="font-size:13px;color:var(--fg2);margin-bottom:12px">${currentUser.email} &middot; ${currentUser.joined}</p>
+        <div id="profileDetails" style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:12px;color:var(--fg3)">No profile details added yet.</div>
+        </div>
+        <button class="btn btn-o btn-sm" style="margin-top:12px" onclick="openEditProfile()"><i class="fas fa-pen" style="font-size:10px"></i> Edit Profile</button>
+      </div>
+    </div>`;
+  updateProfileDetails();
+}
+
+function updateProfileDetails(){
+  if(!currentUser)return;
+  const pd=document.getElementById('profileDetails');
+  if(!pd)return;
+  const d=currentUser.profile||{};
+  if(d.title||d.bio||d.skills){
+    pd.innerHTML=`
+      ${d.title?`<div style="font-size:14px;font-weight:600;color:var(--fg)">${d.title}</div>`:''}
+      ${d.bio?`<p style="font-size:13px;color:var(--fg2);line-height:1.5">${d.bio}</p>`:''}
+      ${d.rate?`<div style="font-size:13px;color:var(--accent);font-weight:600">₹${d.rate}/hr</div>`:''}
+      ${d.skills?.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">${d.skills.map(s=>`<span class="badge b-a">${s}</span>`).join('')}</div>`:''}
+    `;
+  }
+}
+
+function openEditProfile(){
+  const p=currentUser.profile||{};
+  openModal(`<div style="padding:28px">
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:18px">Edit Profile</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Professional Title</label><input class="inp" id="epTitle" placeholder="e.g. Senior React Developer" value="${p.title||''}"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Bio</label><textarea class="inp" id="epBio" rows="3" placeholder="Apne baare mein batao...">${p.bio||''}</textarea></div>
+      ${currentUser.role==='freelancer'?`
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Hourly Rate (₹)</label><input class="inp" type="number" id="epRate" placeholder="2000" value="${p.rate||''}"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Skills (comma separated)</label><input class="inp" id="epSkills" placeholder="React, Node.js, Python" value="${(p.skills||[]).join(', ')}"></div>`:''}
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Location</label><input class="inp" id="epLoc" placeholder="Mumbai, India" value="${p.location||''}"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn btn-o" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="saveProfile()"><i class="fas fa-save"></i> Save</button></div>
+  </div>`);
+}
+
+function saveProfile(){
+  const title=document.getElementById('epTitle').value.trim();
+  const bio=document.getElementById('epBio').value.trim();
+  const loc=document.getElementById('epLoc').value.trim();
+  currentUser.profile={title,bio,location:loc};
+  if(currentUser.role==='freelancer'){
+    currentUser.profile.rate=document.getElementById('epRate').value;
+    currentUser.profile.skills=document.getElementById('epSkills').value.split(',').map(s=>s.trim()).filter(Boolean);
+  }
+  closeModal();renderDashboard();toast('Profile updated!','success');
+}
+
+// ===== JOBS =====
+function renderJobs(list){
+  document.getElementById('jobsList').innerHTML=list.length?list.map(j=>`
+    <div class="card" style="padding:20px;cursor:pointer" onclick="openJobDetail(${j.id})">
+      <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div><h3 style="font-size:15px;font-weight:700;color:var(--fg);margin-bottom:4px">${j.title}</h3><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="badge b-a">${j.cat}</span><span style="font-size:11px;color:var(--fg3)"><i class="fas fa-clock" style="margin-right:3px"></i>${j.duration}</span><span style="font-size:11px;color:var(--fg3)"><i class="fas fa-paper-plane" style="margin-right:3px"></i>${j.proposals} proposals</span></div></div>
+        <div style="font-size:18px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--accent)">${formatBudget(j.budget)}</div>
+      </div>
+      <p style="font-size:13px;color:var(--fg2);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${j.desc}</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">${j.skills.map(s=>`<span class="badge" style="background:var(--bg2);color:var(--fg3)">${s}</span>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--fg3)">${j.client}</span>${stars(j.rating)}<span style="font-size:11px;color:var(--fg3)">${j.rating}</span></div>
+        <span style="font-size:11px;color:var(--fg3)">${j.posted}</span>
+      </div>
+    </div>`).join(''):`<div style="text-align:center;padding:48px"><i class="fas fa-search" style="font-size:28px;color:var(--fg3);margin-bottom:12px"></i><p style="color:var(--fg2)">Koi result nahi mila. Filters change karo.</p></div>`;
+}
+
+function filterJobs(){
+  const q=document.getElementById('jobSearch').value.toLowerCase();
+  const cat=document.getElementById('jobCat').value;
+  const bud=document.getElementById('jobBudget').value;
+  const sort=document.getElementById('jobSort').value;
+  let list=[...jobs];
+  if(q)list=list.filter(j=>j.title.toLowerCase().includes(q)||j.desc.toLowerCase().includes(q)||j.skills.some(s=>s.toLowerCase().includes(q)));
+  if(cat!=='all')list=list.filter(j=>j.cat===cat);
+  if(bud==='u10')list=list.filter(j=>j.budget<10000);
+  else if(bud==='10-50')list=list.filter(j=>j.budget>=10000&&j.budget<=50000);
+  else if(bud==='50-1l')list=list.filter(j=>j.budget>=50000&&j.budget<=100000);
+  else if(bud==='a1l')list=list.filter(j=>j.budget>100000);
+  if(sort==='budget-h')list.sort((a,b)=>b.budget-a.budget);
+  else if(sort==='budget-l')list.sort((a,b)=>a.budget-b.budget);
+  else if(sort==='proposals')list.sort((a,b)=>a.proposals-b.proposals);
+  renderJobs(list);
+}
+
+function openJobDetail(id){
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  const applied=myApplications.some(a=>a.jobId===id);
+  openModal(`<div style="padding:28px">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div><h3 style="font-size:18px;font-weight:700;margin-bottom:6px">${j.title}</h3><span class="badge b-a">${j.cat}</span></div>
+      <div style="font-size:22px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--accent)">${formatBudget(j.budget)}</div>
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--fg2)"><i class="fas fa-clock" style="color:var(--fg3)"></i>${j.duration}</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--fg2)"><i class="fas fa-paper-plane" style="color:var(--fg3)"></i>${j.proposals} proposals</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--fg2)"><i class="fas fa-user" style="color:var(--fg3)"></i>${j.client}</div>
+      <div style="display:flex;align-items:center;gap:4px">${stars(j.rating)}<span style="font-size:11px;color:var(--fg3)">${j.rating}</span></div>
+    </div>
+    <div style="margin-bottom:16px"><h4 style="font-size:13px;font-weight:700;margin-bottom:8px">Description</h4><p style="font-size:13px;color:var(--fg2);line-height:1.7">${j.desc}</p></div>
+    <div style="margin-bottom:20px"><h4 style="font-size:13px;font-weight:700;margin-bottom:8px">Required Skills</h4><div style="display:flex;gap:6px;flex-wrap:wrap">${j.skills.map(s=>`<span class="badge b-a">${s}</span>`).join('')}</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--bg2);border-radius:8px;margin-bottom:16px"><span style="font-size:12px;color:var(--fg3)">Posted ${j.posted}</span><button class="btn btn-g btn-sm" onclick="toast('Job saved to bookmarks','success')"><i class="fas fa-bookmark"></i> Save</button></div>
+    ${applied?`<div style="text-align:center;padding:12px;background:var(--accentg);border-radius:8px;font-size:13px;color:var(--accent);font-weight:600"><i class="fas fa-check-circle" style="margin-right:6px"></i>Already Applied</div>`
+    :`<div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Cover Letter</label><textarea class="inp" id="coverLetter" rows="3" placeholder="Yeh project ke liye kyun perfect ho..."></textarea><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px"><button class="btn btn-o" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="applyJob(${j.id})"><i class="fas fa-paper-plane"></i> Apply Now</button></div></div>`}
+  </div>`);
+}
+
+function applyJob(id){
+  if(!currentUser){toast('Pehle login karo','warning');closeModal();openLogin();return}
+  const cover=document.getElementById('coverLetter')?.value.trim();
+  if(!cover){toast('Cover letter likho','warning');return}
+  if(myApplications.some(a=>a.jobId===id)){toast('Already applied hai','warning');return}
+  myApplications.push({jobId:id,status:'pending',cover,time:new Date().toLocaleString()});
+  closeModal();toast('Application submitted!','success');
+  if(document.getElementById('sec-dashboard').style.display!=='none')renderDashboard();
+}
+
+// ===== FREELANCERS =====
+function renderFL(list){
+  document.getElementById('flList').innerHTML=list.length?list.map(f=>`
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <div class="avatar" style="background:${f.color};width:42px;height:42px;font-size:14px;border-radius:10px">${f.avatar}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--fg)">${f.name}</div><div style="font-size:12px;color:var(--fg3)">${f.title}</div></div>
+        ${f.available?'<span class="badge b-a" style="font-size:10px">Available</span>':'<span class="badge b-o" style="font-size:10px">Busy</span>'}
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:12px;color:var(--fg2)">
+        <span>${stars(f.rating)} ${f.rating}</span><span style="color:var(--fg3)">(${f.reviews} reviews)</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${f.skills.slice(0,4).map(s=>`<span class="badge" style="background:var(--bg2);color:var(--fg3)">${s}</span>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border)">
+        <div><span style="font-size:16px;font-weight:700;color:var(--accent);font-family:'Space Grotesk',sans-serif">₹${f.rate}</span><span style="font-size:11px;color:var(--fg3)">/hr</span></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-g btn-sm" onclick="openFLProfile(${f.id})"><i class="fas fa-eye" style="font-size:10px"></i> View</button>
+          <button class="btn btn-p btn-sm" onclick="hireFL(${f.id})"><i class="fas fa-handshake" style="font-size:10px"></i> Hire</button>
+        </div>
+      </div>
+    </div>`).join(''):`<div style="text-align:center;padding:48px;grid-column:1/-1"><i class="fas fa-users" style="font-size:28px;color:var(--fg3);margin-bottom:12px"></i><p style="color:var(--fg2)">Koi freelancer nahi mila.</p></div>`;
+}
+
+function filterFL(){
+  const q=document.getElementById('flSearch').value.toLowerCase();
+  const sk=document.getElementById('flSkill').value;
+  const rt=document.getElementById('flRating').value;
+  let list=[...freelancers];
+  if(q)list=list.filter(f=>f.name.toLowerCase().includes(q)||f.title.toLowerCase().includes(q)||f.skills.some(s=>s.toLowerCase().includes(q)));
+  if(sk!=='all')list=list.filter(f=>f.skills.some(s=>s.toLowerCase().includes(sk.toLowerCase())));
+  if(rt==='4.5')list=list.filter(f=>f.rating>=4.5);
+  else if(rt==='4.0')list=list.filter(f=>f.rating>=4.0);
+  else if(rt==='3.5')list=list.filter(f=>f.rating>=3.5);
+  renderFL(list);
+}
+
+function openFLProfile(id){
+  const f=freelancers.find(x=>x.id===id);if(!f)return;
+  openModal(`<div style="padding:28px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+      <div class="avatar" style="background:${f.color};width:56px;height:56px;font-size:20px;border-radius:14px">${f.avatar}</div>
+      <div><h3 style="font-size:18px;font-weight:700">${f.name}</h3><p style="font-size:13px;color:var(--fg2)">${f.title}</p><p style="font-size:12px;color:var(--fg3);margin-top:2px"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>${f.location}</p></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div style="text-align:center;padding:10px;background:var(--bg2);border-radius:8px"><div style="font-size:16px;font-weight:700;color:var(--accent)">₹${f.rate}</div><div style="font-size:10px;color:var(--fg3)">Per Hour</div></div>
+      <div style="text-align:center;padding:10px;background:var(--bg2);border-radius:8px"><div style="font-size:16px;font-weight:700;color:var(--orange)">${f.rating}</div><div style="font-size:10px;color:var(--fg3)">${f.reviews} Reviews</div></div>
+      <div style="text-align:center;padding:10px;background:var(--bg2);border-radius:8px"><div style="font-size:16px;font-weight:700;color:var(--fg)">${f.completed}</div><div style="font-size:10px;color:var(--fg3)">Completed</div></div>
+      <div style="text-align:center;padding:10px;background:var(--bg2);border-radius:8px"><div style="font-size:16px;font-weight:700;color:var(--blue)">${f.earned}</div><div style="font-size:10px;color:var(--fg3)">Earned</div></div>
+    </div>
+    <div style="margin-bottom:16px"><h4 style="font-size:13px;font-weight:700;margin-bottom:8px">Skills</h4><div style="display:flex;gap:6px;flex-wrap:wrap">${f.skills.map(s=>`<span class="badge b-a">${s}</span>`).join('')}</div></div>
+    <div style="margin-bottom:20px"><h4 style="font-size:13px;font-weight:700;margin-bottom:8px">Availability</h4><span class="badge ${f.available?'b-a':'b-o'}">${f.available?'Available for new projects':'Currently busy'}</span></div>
+    <div style="display:flex;gap:8px"><button class="btn btn-o" style="flex:1" onclick="closeModal()"><i class="fas fa-envelope" style="font-size:11px"></i> Message</button><button class="btn btn-p" style="flex:1" onclick="closeModal();hireFL(${f.id})"><i class="fas fa-handshake" style="font-size:11px"></i> Hire Now</button></div>
+  </div>`);
+}
+
+function hireFL(id){
+  if(!currentUser){toast('Pehle login karo','warning');openLogin();return}
+  const f=freelancers.find(x=>x.id===id);if(!f)return;
+  openModal(`<div style="padding:28px">
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">Hire ${f.name}</h3>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:18px">${f.title} &middot; ₹${f.rate}/hr</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Project Title</label><input class="inp" placeholder="Project ka naam"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Description</label><textarea class="inp" rows="3" placeholder="Project details..."></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Budget (₹)</label><input class="inp" type="number" placeholder="50000"></div>
+        <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Deadline</label><input class="inp" type="date"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn btn-o" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="closeModal();toast('Invitation sent to ${f.name}!','success')"><i class="fas fa-paper-plane"></i> Send Invite</button></div>
+  </div>`);
+}
+
+// ===== POST JOB =====
+function openPostJob(){
+  if(!currentUser){toast('Pehle login karo','warning');openLogin();return}
+  openModal(`<div style="padding:28px">
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:18px">Post a New Job</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Job Title</label><input class="inp" id="pjTitle" placeholder="e.g. Website Development"></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Category</label><select class="inp" id="pjCat"><option>Web Development</option><option>Mobile App</option><option>Design</option><option>Writing</option><option>Marketing</option><option>Data Science</option></select></div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Description</label><textarea class="inp" id="pjDesc" rows="4" placeholder="Project ki details likho..."></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Budget (₹)</label><input class="inp" type="number" id="pjBudget" placeholder="50000"></div>
+        <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Duration</label><select class="inp" id="pjDur"><option>1-2 weeks</option><option>3-4 weeks</option><option>1-2 months</option><option>3-6 months</option><option>Ongoing</option></select></div>
+      </div>
+      <div><label style="font-size:11px;color:var(--fg2);display:block;margin-bottom:5px">Required Skills (comma separated)</label><input class="inp" id="pjSkills" placeholder="React, Node.js, MongoDB"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn btn-o" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitJob()"><i class="fas fa-plus"></i> Post Job</button></div>
+  </div>`);
+}
+
+function submitJob(){
+  const title=document.getElementById('pjTitle').value.trim();
+  const cat=document.getElementById('pjCat').value;
+  const desc=document.getElementById('pjDesc').value.trim();
+  const budget=document.getElementById('pjBudget').value;
+  const dur=document.getElementById('pjDur').value;
+  const skills=document.getElementById('pjSkills').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!title){toast('Job title enter karo','warning');return}
+  if(!desc){toast('Description likho','warning');return}
+  if(!budget||budget<=0){toast('Valid budget enter karo','warning');return}
+  if(!skills.length){toast('Kam se kam 1 skill add karo','warning');return}
+  jobs.unshift({id:jobs.length+1,title,cat,budget:+budget,duration:dur,proposals:0,desc,skills,posted:'Just now',client:currentUser.name,rating:5.0});
+  closeModal();renderJobs(jobs);toast('Job posted successfully!','success');
+  goTo('jobs');
+}
+
+// ===== INIT =====
+renderJobs(jobs);
+renderFL(freelancers);
+
+// Auto-login check
+if(localStorage.getItem('wh_role')){
+  // Keep logged out state on refresh for safety, just remember role
+}
+</script>
+</body>
+</html>
